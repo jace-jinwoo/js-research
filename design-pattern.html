@@ -133,40 +133,88 @@
 // - Ex) 레거시 코드와 새 코드를 연결할 때... or 두 개의 다른 라이브러리를 하나의 유틸리티로 결합할 때...
 
 // old interface
-function Shipping() {
-    this.request = function(zipStart, zipEnd, weight) {
+// function Shipping() {
+//     this.request = function(zipStart, zipEnd, weight) {
 
-        return "$100"
-    }
-}
+//         return "$100"
+//     }
+// }
 
 // new interface
-function AdvancedShipping() {
-    this.login = function (credentials) { }
-}
+// function AdvancedShipping() {
+//     this.login = function (credentials) { }
+// }
 
-// adapter
-function ShippingAdapter(credentials) {
-    let legacy = new Shipping()
-    let shipping = new AdvancedShipping()
+// // adapter
+// function ShippingAdapter(credentials) {
+//     let legacy = new Shipping()
+//     let shipping = new AdvancedShipping()
     
-    shipping.login(credentials)
+//     shipping.login(credentials)
 
-    return legacy.request
-}
+//     return legacy.request
+// }
 
-function run () {
-    let credentials = { token: '1!Q2@W3#E'}
-    const request = ShippingAdapter(credentials)
+// function run () {
+//     let credentials = { token: '1!Q2@W3#E'}
+//     const request = ShippingAdapter(credentials)
 
-    cost = request('123', '456', '2 lbs')
-    console.log('cost :: ', cost)
-}
-
-run ()
-
+//     cost = request('123', '456', '2 lbs')
+//     console.log('cost :: ', cost)
+// }
+// run ()
 
 // 2. Bridge
+// - 추상화와 구현을 분리하여 독립적으로 변형 가능한 구조
+// - 기능과 구현을 별도로 관리하며 객체 간의 결합도를 낮출 수 있으나 코드 복잡성이 올라감
+
+// Abstraction (추상화)
+class Shape {
+  constructor(color) {
+    this.color = color;
+  }
+
+  draw() {}
+}
+
+// 추상화 상속
+class Circle extends Shape {
+  constructor(x, y, radius, color) {
+    super(color);
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+  }
+
+  draw() {
+    console.log(`Drawing circle with color ${this.color} at (${this.x},${this.y}) with radius ${this.radius}`);
+  }
+}
+
+// Implementor (구현)
+class DrawingAPI {
+  drawCircle(x, y, radius) {}
+}
+
+// Concrete Implementor (구체적인 구현)
+class V2DrawingAPI extends DrawingAPI {
+  drawCircle(x, y, radius) {
+    console.log(`V2DrawingAPI - Drawing circle at (${x},${y}) with radius ${radius}`);
+  }
+}
+
+// Usage
+class CircleShape {
+  constructor(x, y, radius, color, drawingAPI) {
+    this.shape = new Circle(x, y, radius, color);
+    this.drawingAPI = drawingAPI;
+  }
+
+  draw() {
+    this.drawingAPI.drawCircle(this.shape.x, this.shape.y, this.shape.radius);
+  }
+}
+
 // 3. Composite
 // 4. Decorator
 // 5. Facade
