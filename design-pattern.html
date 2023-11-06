@@ -16,12 +16,31 @@
  */
 
 // [Creational Design Pattern]
-// 1. Constructor
+// 1. Constructor / Builder
+// - 복잡한 오브젝트의 구성을 해당 표현과 분리하여 동일한 구성 프로세스를 통해 다양한 표현을 생성
+class Person {
+    constructor (name, age, bro) {
+        this.name = name
+        this.age = age
+        this.bro = bro
+    }
+}
+
+const jace = new Person('jace', 30, null)
+const yasuo = new Person('yasuo', 28, null)
+
+jace.bro = 'jin'
+console.log("jace :: ", jace)
+
+const yone = new Person('yone', 30, null)
+yasuo.bro = yone
+console.log("yasuo :: ", yasuo)
+
 // 2. Factory
 // 3. Abstract Factory
 // 4. Prototype
 // 5. Singleton
-// 6. Builder
+
 
 // [Structural Design Pattern]
 // 1. Adapter
