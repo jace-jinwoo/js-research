@@ -18,25 +18,61 @@
 // [Creational Design Pattern]
 // 1. Constructor / Builder
 // - 복잡한 오브젝트의 구성을 해당 표현과 분리하여 동일한 구성 프로세스를 통해 다양한 표현을 생성
-class Person {
-    constructor (name, age, bro) {
-        this.name = name
-        this.age = age
-        this.bro = bro
+// class Person {
+//     constructor (name, age, bro) {
+//         this.name = name
+//         this.age = age
+//         this.bro = bro
+//     }
+// }
+
+// const jace = new Person('jace', 30, null)
+// const yasuo = new Person('yasuo', 28, null)
+
+// jace.bro = 'jin'
+// console.log("jace :: ", jace)
+
+// const yone = new Person('yone', 30, null)
+// yasuo.bro = yone
+// console.log("yasuo :: ", yasuo)
+
+// 2. Factory
+// - 단일 오브젝트를 만들기 위한 인터페이스를 정의하지만 서브 클래스가 인스턴스화할 클래스를 결정
+// - 팩토리 메서드를 사용하면 클래스가 서브 클래스에 대한 인스턴스화를 연기할 수 있음
+function AnimalFactory() {
+    this.CreateAnimal = function(animalType) {
+        let animal
+        
+        switch(animalType) {
+            case 'dog':
+                animal = new Dog();
+                break;
+            default:
+                animal = new Cat()
+        }
+        return animal
     }
 }
 
-const jace = new Person('jace', 30, null)
-const yasuo = new Person('yasuo', 28, null)
+const Dog = function() {
+    this.makeSound = () => {
+        console.log('Woof!')
+    }
+}
+const Cat = function() {
+    this.makeSound = () => {
+        console.log('prrr meow!')
+    }
+}
 
-jace.bro = 'jin'
-console.log("jace :: ", jace)
+const factory = new AnimalFactory()
 
-const yone = new Person('yone', 30, null)
-yasuo.bro = yone
-console.log("yasuo :: ", yasuo)
+const pepe = factory.CreateAnimal('dog')
+pepe.makeSound()
 
-// 2. Factory
+const momo = factory.CreateAnimal('cat')
+momo.makeSound()
+
 // 3. Abstract Factory
 // 4. Prototype
 // 5. Singleton
