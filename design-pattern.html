@@ -169,53 +169,107 @@
 // - 기능과 구현을 별도로 관리하며 객체 간의 결합도를 낮출 수 있으나 코드 복잡성이 올라감
 
 // Abstraction (추상화)
-class Shape {
-  constructor(color) {
-    this.color = color;
-  }
+// class Shape {
+//   constructor(color) {
+//     this.color = color;
+//   }
 
-  draw() {}
-}
+//   draw() {}
+// }
 
-// 추상화 상속
-class Circle extends Shape {
-  constructor(x, y, radius, color) {
-    super(color);
-    this.x = x;
-    this.y = y;
-    this.radius = radius;
-  }
+// // 추상화 상속
+// class Circle extends Shape {
+//   constructor(x, y, radius, color) {
+//     super(color);
+//     this.x = x;
+//     this.y = y;
+//     this.radius = radius;
+//   }
 
-  draw() {
-    console.log(`Drawing circle with color ${this.color} at (${this.x},${this.y}) with radius ${this.radius}`);
-  }
-}
+//   draw() {
+//     console.log(`Drawing circle with color ${this.color} at (${this.x},${this.y}) with radius ${this.radius}`);
+//   }
+// }
 
-// Implementor (구현)
-class DrawingAPI {
-  drawCircle(x, y, radius) {}
-}
+// // Implementor (구현)
+// class DrawingAPI {
+//   drawCircle(x, y, radius) {}
+// }
 
-// Concrete Implementor (구체적인 구현)
-class V2DrawingAPI extends DrawingAPI {
-  drawCircle(x, y, radius) {
-    console.log(`V2DrawingAPI - Drawing circle at (${x},${y}) with radius ${radius}`);
-  }
-}
+// // Concrete Implementor (구체적인 구현)
+// class V2DrawingAPI extends DrawingAPI {
+//   drawCircle(x, y, radius) {
+//     console.log(`V2DrawingAPI - Drawing circle at (${x},${y}) with radius ${radius}`);
+//   }
+// }
 
-// Usage
-class CircleShape {
-  constructor(x, y, radius, color, drawingAPI) {
-    this.shape = new Circle(x, y, radius, color);
-    this.drawingAPI = drawingAPI;
-  }
+// // Usage
+// class CircleShape {
+//   constructor(x, y, radius, color, drawingAPI) {
+//     this.shape = new Circle(x, y, radius, color);
+//     this.drawingAPI = drawingAPI;
+//   }
 
-  draw() {
-    this.drawingAPI.drawCircle(this.shape.x, this.shape.y, this.shape.radius);
-  }
-}
+//   draw() {
+//     this.drawingAPI.drawCircle(this.shape.x, this.shape.y, this.shape.radius);
+//   }
+// }
 
 // 3. Composite
+// - 클래스가 구조적인 패턴일 때 단일 객체와 복합 객체를 동일하게 컨트롤 가능하게 함
+// - Ex) Directory(파일/폴더) or Node(자기자신/자식) 같은 트리 구조
+function Node(name) {
+    this.children = []
+    this.name = name
+}
+
+Node.prototype = {
+    add(child) {
+        this.children.push(child)
+    },
+    remove(child) {
+        let length = this.children.length
+        for (let i = 0; i < length; i++) {
+            if (this.children[i] === child) {
+                this.children.splice(i, 1)
+                return
+            }
+        }
+    },
+    getChild(i) {
+        return this.children[i]
+    },
+    hasChildren() {
+        return this.children.length > 0
+    }
+}
+
+function traverse(indent, node) {
+    console.log(node)
+    console.log(Array(++indent).join('--') + node.name)
+
+    for (let i = 0; i < node.children.length; i++) {
+        traverse(indent, node.getChild(i))
+    }
+}
+
+function run() {
+    let tree = new Node('root')
+    let left = new Node('left')
+    let right = new Node('right')
+    let rightright = new Node('rightright')
+
+    tree.add(left)
+    tree.add(right)
+
+    right.add(rightright)
+    traverse(0, tree)
+}
+run ()
+
+
+
+
 // 4. Decorator
 // 5. Facade
 // 6. Flyweight
