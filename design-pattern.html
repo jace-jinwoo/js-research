@@ -76,28 +76,52 @@
 // 3. Prototype
 // - 프로토타입 인스턴스를 사용하여 생성할 오브젝트의 종류를 지정하고,
 // - 기존 오브젝트의 뼈대에서 새 오브젝트를 생성하여 성능을 높이고 메모리 공간을 최소화
-const macBook = {
-    color: 'silver',
-    turnOn() {
-        console.log("Turning on...")
-    },
-    turnOff() {
-        console.log("Turning off...")
+// const macBook = {
+//     color: 'silver',
+//     turnOn() {
+//         console.log("Turning on...")
+//     },
+//     turnOff() {
+//         console.log("Turning off...")
+//     }
+// }
+
+// const myCom = Object.create(macBook, {owner: {value: 'Jace'}})
+// console.log("myCom :: ", myCom, myCom.__proto__ === macBook)
+
+// const newCom = {...macBook, owner: 'Jace'}
+// console.log("newCom :: ", newCom, newCom.__proto__ === macBook)
+
+// macBook.power = 'USB-C'
+// console.log(myCom)
+// console.log(newCom)
+
+
+// 4. Singleton / Strict
+// - 클래스에 인스턴스가 하나만 있는지 확인하고 이에 대한 전역 액세스 포인트를 제공
+// - 다른 인스턴스를 만드려고 시도하면 이미 존재하는 인스턴스 (참조값) 반환
+const DB = (function() {
+    let instance;
+
+    function createDBInstance() {
+        return new Object('DB Instance')
     }
-}
 
-const myCom = Object.create(macBook, {owner: {value: 'Jace'}})
-console.log("myCom :: ", myCom, myCom.__proto__ === macBook)
+    function getDBInstance() {
+        if (!instance) {
+            instance = createDBInstance()
+        }
 
-const newCom = {...macBook, owner: 'Jace'}
-console.log("newCom :: ", newCom, newCom.__proto__ === macBook)
+        return instance
+    }
 
-macBook.power = 'USB-C'
-console.log(myCom)
-console.log(newCom)
+    return { getDBInstance }
+})()
 
+const DBInstance1 = DB.getDBInstance()
+const DBInstance2 = DB.getDBInstance()
 
-// 4. Singleton
+console.log(DBInstance1 === DBInstance2)
 
 
 // [Structural Design Pattern]
