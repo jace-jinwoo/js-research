@@ -11,8 +11,11 @@
  *  [JavaScript Design Pattern]
  * 
  *  1. Creational Design Pattern
+ *      - 객체 생성 매커니즘을 핸들링
  *  2. Structural Design Pattern
+ *      - 객체간 관계(상하 구조, 메인-서브, 합성 등..)를 핸들링
  *  3. Behavioral Design Pattern
+ *      - 다른 객체간 커뮤니케이션을 핸들링
  */
 
 // [Creational Design Pattern]
@@ -367,27 +370,46 @@
 // - 원본 객체를 대리하여 대신 처리함으로써 로직의 흐름 제어
 // - 대상 클래스가 민감한 정보를 가지고 있거나 인스턴스화 하기에 무겁거나 추가 기능을 가미하고 싶을 때..
 // - 즉, 원본 객체 사용의 리스크가 있거나 수정할 수 없는 상황일 때 사용
-const bank = {
-    name: 'IBK',
-    location: 'SEOUL',
-    balance: 10000
-}
+// const bank = {
+//     name: 'IBK',
+//     location: 'SEOUL',
+//     balance: 10000
+// }
 
-const mobileApp = new Proxy(bank, {
-    get: (obj, prop) => {
-        console.log(`The value of ${prop} is ${obj[prop]}`)
-    },
-    set: (obj, prop, value) => {
-        console.log(`Changed ${prop} from ${obj[prop]} to ${value}`)
-        obj[prop] = value
-    },
-})
+// const mobileApp = new Proxy(bank, {
+//     get: (obj, prop) => {
+//         console.log(`The value of ${prop} is ${obj[prop]}`)
+//     },
+//     set: (obj, prop, value) => {
+//         console.log(`Changed ${prop} from ${obj[prop]} to ${value}`)
+//         obj[prop] = value
+//     },
+// })
 
-mobileApp.balance
-mobileApp.balance = 20000
+// mobileApp.balance
+// mobileApp.balance = 20000
+
 
 // [Behavioral Design Pattern]
 // 1. Chain of Responsibility
+// - 책임 연쇄 패턴은 클라이언트의 요청을 하나의 객체가 전부 처리하지 않고,
+// - 여러 처리 객체들로 나누고 사슬로 연결하여 처리하는 행동 패턴
+function Request(params) {
+    this.params = params
+}
+Request.prototype = {
+    get (params) {
+        this.params = {...this.params, ...params}
+        console.log('request :: ', this.params)
+        return this
+    }
+}
+function run () {
+    const req = new Request({method: 'post'})
+    req.get({url: '/ABC'}).get({body: {user: 'jace'}})
+}
+run()
+
 // 2. Command
 // 3. Iterator
 // 4. Mediator
