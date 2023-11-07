@@ -218,60 +218,103 @@
 // 3. Composite
 // - 클래스가 구조적인 패턴일 때 단일 객체와 복합 객체를 동일하게 컨트롤 가능하게 함
 // - Ex) Directory(파일/폴더) or Node(자기자신/자식) 같은 트리 구조
-function Node(name) {
-    this.children = []
-    this.name = name
-}
+// function Node(name) {
+//     this.children = []
+//     this.name = name
+// }
 
-Node.prototype = {
-    add(child) {
-        this.children.push(child)
-    },
-    remove(child) {
-        let length = this.children.length
-        for (let i = 0; i < length; i++) {
-            if (this.children[i] === child) {
-                this.children.splice(i, 1)
-                return
-            }
-        }
-    },
-    getChild(i) {
-        return this.children[i]
-    },
-    hasChildren() {
-        return this.children.length > 0
-    }
-}
+// Node.prototype = {
+//     add(child) {
+//         this.children.push(child)
+//     },
+//     remove(child) {
+//         let length = this.children.length
+//         for (let i = 0; i < length; i++) {
+//             if (this.children[i] === child) {
+//                 this.children.splice(i, 1)
+//                 return
+//             }
+//         }
+//     },
+//     getChild(i) {
+//         return this.children[i]
+//     },
+//     hasChildren() {
+//         return this.children.length > 0
+//     }
+// }
 
-function traverse(indent, node) {
-    console.log(node)
-    console.log(Array(++indent).join('--') + node.name)
+// function traverse(indent, node) {
+//     console.log(node)
+//     console.log(Array(++indent).join('--') + node.name)
 
-    for (let i = 0; i < node.children.length; i++) {
-        traverse(indent, node.getChild(i))
-    }
-}
+//     for (let i = 0; i < node.children.length; i++) {
+//         traverse(indent, node.getChild(i))
+//     }
+// }
 
-function run() {
-    let tree = new Node('root')
-    let left = new Node('left')
-    let right = new Node('right')
-    let rightright = new Node('rightright')
+// function run() {
+//     let tree = new Node('root')
+//     let left = new Node('left')
+//     let right = new Node('right')
+//     let rightright = new Node('rightright')
 
-    tree.add(left)
-    tree.add(right)
+//     tree.add(left)
+//     tree.add(right)
 
-    right.add(rightright)
-    traverse(0, tree)
-}
-run ()
-
-
+//     right.add(rightright)
+//     traverse(0, tree)
+// }
+// run ()
 
 
 // 4. Decorator
+// - 객체의 기능 확장이나 변경이 필요할 때 유연하게 객체의 결합을 하기 위함
+// - Ex) 에스프레소에 물, 우유의 조합으로 다양한 커피를 제조할 때
+
+// 클래스 상속
+// 클래스와 레시피가 동격...
+function Espresso() {
+    this.cost = 2500
+}
+function Americano() {
+    Espresso.call(this)
+    this.cost = new Espresso().cost + 500
+    this.water = 250
+}
+function CafeLatte() {
+    Americano.call(this)
+    this.cost = new Americano().cost + 500
+    this.milk = 100
+}
+console.log(new Espresso())
+console.log(new Americano())
+console.log(new CafeLatte())
+
+// 데코레이터 
+// 재료를 생성자 함수로 만들어 원하는 레시피대로 사용...
+function Water(espresso) {
+    espresso.cost = espresso.cost + 500 // won
+    espresso.water = 250 // ml
+    return espresso
+}
+function Milk(espresso) {
+    espresso.cost = espresso.cost + 500
+    espresso.milk = 100
+    return espresso
+}
+const espresso = new Espresso()
+const americano = Water(new Espresso())
+const cafeLatte = Milk(Water(new Espresso()))
+console.log('Espresso :: ', espresso)
+console.log('Americano :: ', americano)
+console.log('CafeLatte :: ', cafeLatte)
+
 // 5. Facade
+// - 사용하기 복잡한 클래스에 대해 간편한 인터페이스를 구성하여 사용성을 높임
+// - Ex) 일반 유저들은 컴퓨터의 동작 매커니즘을 몰라도 전원 버튼 누르면 자동으로 켜짐
+
+
 // 6. Flyweight
 // 7. Proxy
 
