@@ -394,23 +394,96 @@
 // 1. Chain of Responsibility
 // - 책임 연쇄 패턴은 클라이언트의 요청을 하나의 객체가 전부 처리하지 않고,
 // - 여러 처리 객체들로 나누고 사슬로 연결하여 처리하는 행동 패턴
-function Request(params) {
-    this.params = params
+// function Request(params) {
+//     this.params = params
+// }
+// Request.prototype = {
+//     get (params) {
+//         this.params = {...this.params, ...params}
+//         console.log('request :: ', this.params)
+//         return this
+//     }
+// }
+// function run () {
+//     const req = new Request({method: 'post'})
+//     req.get({url: '/ABC'}).get({body: {user: 'jace'}})
+// }
+// run()
+
+// 2. Command
+// - 요청을 객체로 캡슐화하여 다른 요청이 있는 클라이언트 매개변수화와 요청 대기열, 로깅을 허용
+// - 실행 취소할 수 있는 작업을 지원
+function add(x, y) { return x + y; }
+function sub(x, y) { return x - y; }
+function mul(x, y) { return x * y; }
+function div(x, y) { return x / y; }
+
+var Command = function (execute, undo, value) {
+    this.execute = execute;
+    this.undo = undo;
+    this.value = value;
 }
-Request.prototype = {
-    get (params) {
-        this.params = {...this.params, ...params}
-        console.log('request :: ', this.params)
-        return this
+
+var AddCommand = function (value) {
+    return new Command(add, sub, value);
+};
+
+var SubCommand = function (value) {
+    return new Command(sub, add, value);
+};
+
+var MulCommand = function (value) {
+    return new Command(mul, div, value);
+};
+
+var DivCommand = function (value) {
+    return new Command(div, mul, value);
+};
+
+var Calculator = function () {
+    var current = 0;
+    var commands = [];
+
+    function action(command) {
+        var name = command.execute.toString().substr(9, 3);
+        return name.charAt(0).toUpperCase() + name.slice(1);
+    }
+
+    return {
+        execute: function (command) {
+            current = command.execute(current, command.value);
+            commands.push(command);
+            console.log(action(command) + ": " + command.value);
+        },
+
+        undo: function () {
+            var command = commands.pop();
+            current = command.undo(current, command.value);
+            console.log("Undo " + action(command) + ": " + command.value);
+        },
+
+        getCurrentValue: function () {
+            return current;
+        }
     }
 }
-function run () {
-    const req = new Request({method: 'post'})
-    req.get({url: '/ABC'}).get({body: {user: 'jace'}})
+
+function run() {
+    var calculator = new Calculator();
+
+    // issue commands
+    calculator.execute(new AddCommand(100));
+    calculator.execute(new SubCommand(24));
+    calculator.execute(new MulCommand(6));
+    calculator.execute(new DivCommand(2));
+
+    // reverse last two commands
+    calculator.undo();
+    calculator.undo();
+    console.log("\nValue: " + calculator.getCurrentValue());
 }
 run()
 
-// 2. Command
 // 3. Iterator
 // 4. Mediator
 // 5. Memento
@@ -420,7 +493,6 @@ run()
 // 9. Template method
 // 10. Visitor
 
- 
  
 
 </script>
