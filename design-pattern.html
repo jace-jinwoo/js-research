@@ -720,48 +720,86 @@
 
 // 8. Strategy
 // - 대체 및 상호작용이 가능한 알고리즘을 캡슐화
-var Shipping = function () {
-    this.company = "";
-};
+// var Shipping = function () {
+//     this.company = "";
+// };
 
-Shipping.prototype = {
-    setStrategy: function (company) {
-        this.company = company;
-    },
-    calculate: function (package) {
-        return this.company.calculate(package);
-    }
-};
+// Shipping.prototype = {
+//     setStrategy: function (company) {
+//         this.company = company;
+//     },
+//     calculate: function (package) {
+//         return this.company.calculate(package);
+//     }
+// };
 
-var UPS = function () {
-    this.calculate = function (package) {
-        // calculations...
-        return "$45.95";
-    }
-};
-var Fedex = function () {
-    this.calculate = function (package) {
-        // calculations...
-        return "$43.20";
-    }
-};
+// var UPS = function () {
+//     this.calculate = function (package) {
+//         // calculations...
+//         return "$45.95";
+//     }
+// };
+// var Fedex = function () {
+//     this.calculate = function (package) {
+//         // calculations...
+//         return "$43.20";
+//     }
+// };
 
-function run() {
-    var package = { from: "76712", to: "10012", weight: "lkg" };
+// function run() {
+//     var package = { from: "76712", to: "10012", weight: "lkg" };
 
-    // the 2 strategies
-    var ups = new UPS();
-    var fedex = new Fedex();
+//     // the 2 strategies
+//     var ups = new UPS();
+//     var fedex = new Fedex();
 
-    var shipping = new Shipping();
+//     var shipping = new Shipping();
 
-    shipping.setStrategy(ups);
-    console.log("UPS Strategy: " + shipping.calculate(package));
-    shipping.setStrategy(fedex);
-    console.log("Fedex Strategy: " + shipping.calculate(package));
-}
+//     shipping.setStrategy(ups);
+//     console.log("UPS Strategy: " + shipping.calculate(package));
+//     shipping.setStrategy(fedex);
+//     console.log("Fedex Strategy: " + shipping.calculate(package));
+// }
 
 // 9. Template method
+// - 일부 단계를 서브 클래스로 지연하여 연산에서 알고리즘 뼈대를 정의
+// - 즉, 알고리즘에 필요한 메서드, 순서 등에 대한 틀을 정의하고, 서브 클래스에서 재정의하는 패턴
+var datastore = {
+    process: function () {
+        this.connect();
+        this.select();
+        this.disconnect();
+        return true;
+    }
+};
+
+function inherit(proto) {
+    var F = function () { };
+    F.prototype = proto;
+    return new F();
+}
+
+function run() {
+    var mySql = inherit(datastore);
+
+    // implement template steps
+
+    mySql.connect = function () {
+        console.log("MySQL: connect step");
+    };
+
+    mySql.select = function () {
+        console.log("MySQL: select step");
+    };
+
+    mySql.disconnect = function () {
+        console.log("MySQL: disconnect step");
+    };
+
+    mySql.process();
+}
+run()
+
 // 10. Visitor
 
  
