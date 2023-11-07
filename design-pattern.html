@@ -702,23 +702,65 @@
 
 // 7. State
 // - 객체가 상태에 따라 같은 메소드가 다른 행위를 하도록 위임하는 패턴
-class Light {
-    constructor() {
-        this.state = false
-    }
+// class Light {
+//     constructor() {
+//         this.state = false
+//     }
     
-    toggle() {
-        this.state = !this.state
-    }
-}
+//     toggle() {
+//         this.state = !this.state
+//     }
+// }
 
-const light = new Light
-light.toggle()
-console.log(light.state)
-light.toggle()
-console.log(light.state)
+// const light = new Light
+// light.toggle()
+// console.log(light.state)
+// light.toggle()
+// console.log(light.state)
 
 // 8. Strategy
+// - 대체 및 상호작용이 가능한 알고리즘을 캡슐화
+var Shipping = function () {
+    this.company = "";
+};
+
+Shipping.prototype = {
+    setStrategy: function (company) {
+        this.company = company;
+    },
+    calculate: function (package) {
+        return this.company.calculate(package);
+    }
+};
+
+var UPS = function () {
+    this.calculate = function (package) {
+        // calculations...
+        return "$45.95";
+    }
+};
+var Fedex = function () {
+    this.calculate = function (package) {
+        // calculations...
+        return "$43.20";
+    }
+};
+
+function run() {
+    var package = { from: "76712", to: "10012", weight: "lkg" };
+
+    // the 2 strategies
+    var ups = new UPS();
+    var fedex = new Fedex();
+
+    var shipping = new Shipping();
+
+    shipping.setStrategy(ups);
+    console.log("UPS Strategy: " + shipping.calculate(package));
+    shipping.setStrategy(fedex);
+    console.log("Fedex Strategy: " + shipping.calculate(package));
+}
+
 // 9. Template method
 // 10. Visitor
 
