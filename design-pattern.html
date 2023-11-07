@@ -719,7 +719,7 @@
 // console.log(light.state)
 
 // 8. Strategy
-// - 대체 및 상호작용이 가능한 알고리즘을 캡슐화
+// - 실행(runtime) 중 알고리즘 전략을 선택하여 객체 동작을 실시간으로 바꾸도록 가능
 // var Shipping = function () {
 //     this.company = "";
 // };
@@ -764,45 +764,46 @@
 // 9. Template method
 // - 일부 단계를 서브 클래스로 지연하여 연산에서 알고리즘 뼈대를 정의
 // - 즉, 알고리즘에 필요한 메서드, 순서 등에 대한 틀을 정의하고, 서브 클래스에서 재정의하는 패턴
-var datastore = {
-    process: function () {
-        this.connect();
-        this.select();
-        this.disconnect();
-        return true;
-    }
-};
+// var datastore = {
+//     process: function () {
+//         this.connect();
+//         this.select();
+//         this.disconnect();
+//         return true;
+//     }
+// };
 
-function inherit(proto) {
-    var F = function () { };
-    F.prototype = proto;
-    return new F();
-}
+// function inherit(proto) {
+//     var F = function () { };
+//     F.prototype = proto;
+//     return new F();
+// }
 
-function run() {
-    var mySql = inherit(datastore);
+// function run() {
+//     var mySql = inherit(datastore);
 
-    // implement template steps
+//     // implement template steps
 
-    mySql.connect = function () {
-        console.log("MySQL: connect step");
-    };
+//     mySql.connect = function () {
+//         console.log("MySQL: connect step");
+//     };
 
-    mySql.select = function () {
-        console.log("MySQL: select step");
-    };
+//     mySql.select = function () {
+//         console.log("MySQL: select step");
+//     };
 
-    mySql.disconnect = function () {
-        console.log("MySQL: disconnect step");
-    };
+//     mySql.disconnect = function () {
+//         console.log("MySQL: disconnect step");
+//     };
 
-    mySql.process();
-}
-run()
+//     mySql.process();
+// }
+// run()
 
 // 10. Visitor
+// - 방문자와 방문공간을 분리시켜 이후 행동을 방문자에게 위임하는 패턴
+// - 객체의 구조와 기능을 분리시켜 구조의 수정없이 새로운 동작을 기존 객체 구조에 추가 가능
 
- 
 
 </script>
 </body>
