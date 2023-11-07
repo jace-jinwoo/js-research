@@ -655,55 +655,69 @@
 // 6. Observer
 // - 옵저버가 관찰하는 대상의 상태가 변화할 때마다 대상자는 직접 목록의 관찰자에게 통지하고,
 // - 관찰자는 알림을 받아 조치를 취하는 행동 패턴 (구독 형태)
-function Click() {
-    this.handlers = [];  // observers
-}
+// function Click() {
+//     this.handlers = [];  // observers
+// }
 
-Click.prototype = {
+// Click.prototype = {
 
-    subscribe: function (fn) {
-        this.handlers.push(fn);
-    },
+//     subscribe: function (fn) {
+//         this.handlers.push(fn);
+//     },
 
-    unsubscribe: function (fn) {
-        this.handlers = this.handlers.filter(
-            function (item) {
-                if (item !== fn) {
-                    return item;
-                }
-            }
-        );
-    },
+//     unsubscribe: function (fn) {
+//         this.handlers = this.handlers.filter(
+//             function (item) {
+//                 if (item !== fn) {
+//                     return item;
+//                 }
+//             }
+//         );
+//     },
 
-    fire: function (o, thisObj) {
-        var scope = thisObj || window;
-        this.handlers.forEach(function (item) {
-            item.call(scope, o);
-        });
+//     fire: function (o, thisObj) {
+//         var scope = thisObj || window;
+//         this.handlers.forEach(function (item) {
+//             item.call(scope, o);
+//         });
+//     }
+// }
+
+// function run() {
+
+//     var clickHandler = function (item) {
+//         console.log("fired: " + item);
+//     };
+
+//     var click = new Click();
+
+//     click.subscribe(clickHandler);
+//     click.fire('event #1');
+//     click.unsubscribe(clickHandler);
+//     click.fire('event #2');
+//     click.subscribe(clickHandler);
+//     click.fire('event #3');
+// }
+// run ()
+
+// 7. State
+// - 객체가 상태에 따라 같은 메소드가 다른 행위를 하도록 위임하는 패턴
+class Light {
+    constructor() {
+        this.state = false
+    }
+    
+    toggle() {
+        this.state = !this.state
     }
 }
 
-function run() {
+const light = new Light
+light.toggle()
+console.log(light.state)
+light.toggle()
+console.log(light.state)
 
-    var clickHandler = function (item) {
-        console.log("fired: " + item);
-    };
-
-    var click = new Click();
-
-    click.subscribe(clickHandler);
-    click.fire('event #1');
-    click.unsubscribe(clickHandler);
-    click.fire('event #2');
-    click.subscribe(clickHandler);
-    click.fire('event #3');
-}
-run ()
-
-
-
-
-// 7. State
 // 8. Strategy
 // 9. Template method
 // 10. Visitor
