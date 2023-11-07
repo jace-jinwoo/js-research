@@ -595,64 +595,114 @@
 // 5. Memento
 // - 임시 저장소, 객체 복원 기능을 제공
 // - 필요한 지속 기간에 따라 객체 상태를 저장할 수 있음
-var Person = function (name, street, city, state) {
-    this.name = name;
-    this.street = street;
-    this.city = city;
-    this.state = state;
+// var Person = function (name, street, city, state) {
+//     this.name = name;
+//     this.street = street;
+//     this.city = city;
+//     this.state = state;
+// }
+
+// Person.prototype = {
+//     hydrate: function () {
+//         var memento = JSON.stringify(this);
+//         return memento;
+//     },
+//     dehydrate: function (memento) {
+//         var m = JSON.parse(memento);
+//         this.name = m.name;
+//         this.street = m.street;
+//         this.city = m.city;
+//         this.state = m.state;
+//     }
+// }
+
+// var CareTaker = function () {
+//     this.mementos = {};
+
+//     this.add = function (key, memento) {
+//         this.mementos[key] = memento;
+//     },
+//     this.get = function (key) {
+//         return this.mementos[key];
+//     }
+// }
+
+// function run() {
+//     var mike = new Person("Mike Foley", "1112 Main", "Dallas", "TX");
+//     var john = new Person("John Wang", "48th Street", "San Jose", "CA");
+//     var caretaker = new CareTaker();
+
+//     // save state
+//     caretaker.add(1, mike.hydrate());
+//     caretaker.add(2, john.hydrate());
+
+//     // mess up their names
+//     mike.name = "King Kong";
+//     john.name = "Superman";
+
+//     console.log(mike.name);
+//     console.log(john.name);
+
+//     // restore original state
+//     mike.dehydrate(caretaker.get(1));
+//     john.dehydrate(caretaker.get(2));
+
+//     console.log(mike.name);
+//     console.log(john.name);
+// }
+// run ()
+
+// 6. Observer
+// - 옵저버가 관찰하는 대상의 상태가 변화할 때마다 대상자는 직접 목록의 관찰자에게 통지하고,
+// - 관찰자는 알림을 받아 조치를 취하는 행동 패턴 (구독 형태)
+function Click() {
+    this.handlers = [];  // observers
 }
 
-Person.prototype = {
-    hydrate: function () {
-        var memento = JSON.stringify(this);
-        return memento;
-    },
-    dehydrate: function (memento) {
-        var m = JSON.parse(memento);
-        this.name = m.name;
-        this.street = m.street;
-        this.city = m.city;
-        this.state = m.state;
-    }
-}
+Click.prototype = {
 
-var CareTaker = function () {
-    this.mementos = {};
-
-    this.add = function (key, memento) {
-        this.mementos[key] = memento;
+    subscribe: function (fn) {
+        this.handlers.push(fn);
     },
-    this.get = function (key) {
-        return this.mementos[key];
+
+    unsubscribe: function (fn) {
+        this.handlers = this.handlers.filter(
+            function (item) {
+                if (item !== fn) {
+                    return item;
+                }
+            }
+        );
+    },
+
+    fire: function (o, thisObj) {
+        var scope = thisObj || window;
+        this.handlers.forEach(function (item) {
+            item.call(scope, o);
+        });
     }
 }
 
 function run() {
-    var mike = new Person("Mike Foley", "1112 Main", "Dallas", "TX");
-    var john = new Person("John Wang", "48th Street", "San Jose", "CA");
-    var caretaker = new CareTaker();
 
-    // save state
-    caretaker.add(1, mike.hydrate());
-    caretaker.add(2, john.hydrate());
+    var clickHandler = function (item) {
+        console.log("fired: " + item);
+    };
 
-    // mess up their names
-    mike.name = "King Kong";
-    john.name = "Superman";
+    var click = new Click();
 
-    console.log(mike.name);
-    console.log(john.name);
-
-    // restore original state
-    mike.dehydrate(caretaker.get(1));
-    john.dehydrate(caretaker.get(2));
-
-    console.log(mike.name);
-    console.log(john.name);
+    click.subscribe(clickHandler);
+    click.fire('event #1');
+    click.unsubscribe(clickHandler);
+    click.fire('event #2');
+    click.subscribe(clickHandler);
+    click.fire('event #3');
 }
 run ()
 
-// 6. Observer
+
+
+
 // 7. State
 // 8. Strategy
 // 9. Template method
