@@ -341,30 +341,50 @@
 
 // 6. Flyweight
 // - 재사용 가능한 객체 인스턴스를 공유하여 메모리 사용량 최소화
-class Book {
-    constructor(title, author, isbn) {
-        this.title = title
-        this.author = author
-        this.isbn = isbn
-    }
-}
+// class Book {
+//     constructor(title, author, isbn) {
+//         this.title = title
+//         this.author = author
+//         this.isbn = isbn
+//     }
+// }
 
-const books = new Map()
-const createBook = (title, author, isbn) => {
-    const existingBook = books.has(isbn)
+// const books = new Map()
+// const createBook = (title, author, isbn) => {
+//     const existingBook = books.has(isbn)
 
-    if (existingBook) return books.get(isbn)
-    const book = new Book(title, author, isbn)
-    books.set(isbn, book)
+//     if (existingBook) return books.get(isbn)
+//     const book = new Book(title, author, isbn)
+//     books.set(isbn, book)
 
-    return book
-}
+//     return book
+// }
 
-const new_book = createBook('가시고기', '조창인', 'QJALNFEK')
-console.log('new_book :: ', new_book)
+// const new_book = createBook('가시고기', '조창인', 'QJALNFEK')
+// console.log('new_book :: ', new_book)
 
 // 7. Proxy
+// - 원본 객체를 대리하여 대신 처리함으로써 로직의 흐름 제어
+// - 대상 클래스가 민감한 정보를 가지고 있거나 인스턴스화 하기에 무겁거나 추가 기능을 가미하고 싶을 때..
+// - 즉, 원본 객체 사용의 리스크가 있거나 수정할 수 없는 상황일 때 사용
+const bank = {
+    name: 'IBK',
+    location: 'SEOUL',
+    balance: 10000
+}
 
+const mobileApp = new Proxy(bank, {
+    get: (obj, prop) => {
+        console.log(`The value of ${prop} is ${obj[prop]}`)
+    },
+    set: (obj, prop, value) => {
+        console.log(`Changed ${prop} from ${obj[prop]} to ${value}`)
+        obj[prop] = value
+    },
+})
+
+mobileApp.balance
+mobileApp.balance = 20000
 
 // [Behavioral Design Pattern]
 // 1. Chain of Responsibility
