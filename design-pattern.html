@@ -413,78 +413,124 @@
 // 2. Command
 // - 요청을 객체로 캡슐화하여 다른 요청이 있는 클라이언트 매개변수화와 요청 대기열, 로깅을 허용
 // - 실행 취소할 수 있는 작업을 지원
-function add(x, y) { return x + y; }
-function sub(x, y) { return x - y; }
-function mul(x, y) { return x * y; }
-function div(x, y) { return x / y; }
+// function add(x, y) { return x + y; }
+// function sub(x, y) { return x - y; }
+// function mul(x, y) { return x * y; }
+// function div(x, y) { return x / y; }
 
-var Command = function (execute, undo, value) {
-    this.execute = execute;
-    this.undo = undo;
-    this.value = value;
+// var Command = function (execute, undo, value) {
+//     this.execute = execute;
+//     this.undo = undo;
+//     this.value = value;
+// }
+
+// var AddCommand = function (value) {
+//     return new Command(add, sub, value);
+// };
+
+// var SubCommand = function (value) {
+//     return new Command(sub, add, value);
+// };
+
+// var MulCommand = function (value) {
+//     return new Command(mul, div, value);
+// };
+
+// var DivCommand = function (value) {
+//     return new Command(div, mul, value);
+// };
+
+// var Calculator = function () {
+//     var current = 0;
+//     var commands = [];
+
+//     function action(command) {
+//         var name = command.execute.toString().substr(9, 3);
+//         return name.charAt(0).toUpperCase() + name.slice(1);
+//     }
+
+//     return {
+//         execute: function (command) {
+//             current = command.execute(current, command.value);
+//             commands.push(command);
+//             console.log(action(command) + ": " + command.value);
+//         },
+
+//         undo: function () {
+//             var command = commands.pop();
+//             current = command.undo(current, command.value);
+//             console.log("Undo " + action(command) + ": " + command.value);
+//         },
+
+//         getCurrentValue: function () {
+//             return current;
+//         }
+//     }
+// }
+
+// function run() {
+//     var calculator = new Calculator();
+
+//     // issue commands
+//     calculator.execute(new AddCommand(100));
+//     calculator.execute(new SubCommand(24));
+//     calculator.execute(new MulCommand(6));
+//     calculator.execute(new DivCommand(2));
+
+//     // reverse last two commands
+//     calculator.undo();
+//     calculator.undo();
+//     console.log("\nValue: " + calculator.getCurrentValue());
+// }
+// run()
+
+// 3. Iterator
+// - 순차적인 접근(순회)을 지원하는 패턴
+// - 리스트, 트리, 그래프 등.. 의 데이터 구조를 순회하는 알고리즘 전략
+var Iterator = function (items) {
+    this.index = 0;
+    this.items = items;
 }
 
-var AddCommand = function (value) {
-    return new Command(add, sub, value);
-};
-
-var SubCommand = function (value) {
-    return new Command(sub, add, value);
-};
-
-var MulCommand = function (value) {
-    return new Command(mul, div, value);
-};
-
-var DivCommand = function (value) {
-    return new Command(div, mul, value);
-};
-
-var Calculator = function () {
-    var current = 0;
-    var commands = [];
-
-    function action(command) {
-        var name = command.execute.toString().substr(9, 3);
-        return name.charAt(0).toUpperCase() + name.slice(1);
-    }
-
-    return {
-        execute: function (command) {
-            current = command.execute(current, command.value);
-            commands.push(command);
-            console.log(action(command) + ": " + command.value);
-        },
-
-        undo: function () {
-            var command = commands.pop();
-            current = command.undo(current, command.value);
-            console.log("Undo " + action(command) + ": " + command.value);
-        },
-
-        getCurrentValue: function () {
-            return current;
+Iterator.prototype = {
+    first: function () {
+        this.reset();
+        return this.next();
+    },
+    next: function () {
+        return this.items[this.index++];
+    },
+    hasNext: function () {
+        return this.index <= this.items.length;
+    },
+    reset: function () {
+        this.index = 0;
+    },
+    each: function (callback) {
+        for (var item = this.first(); this.hasNext(); item = this.next()) {
+            callback(item);
         }
     }
 }
 
 function run() {
-    var calculator = new Calculator();
+    var items = ["one", 2, "circle", true, "Applepie"];
+    var iter = new Iterator(items);
 
-    // issue commands
-    calculator.execute(new AddCommand(100));
-    calculator.execute(new SubCommand(24));
-    calculator.execute(new MulCommand(6));
-    calculator.execute(new DivCommand(2));
+    // using for loop
+    for (var item = iter.first(); iter.hasNext(); item = iter.next()) {
+        console.log(item);
+    }
+    console.log("");
 
-    // reverse last two commands
-    calculator.undo();
-    calculator.undo();
-    console.log("\nValue: " + calculator.getCurrentValue());
+    // using Iterator's each method
+    iter.each(function (item) {
+        console.log(item);
+    });
 }
 run()
 
-// 3. Iterator
+
 // 4. Mediator
 // 5. Memento
 // 6. Observer
